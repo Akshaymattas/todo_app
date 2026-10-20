@@ -1,0 +1,300 @@
+:root {
+  --bg: #f4f5f9;
+  --surface: #ffffff;
+  --text: #1c1d29;
+  --muted: #6b6f85;
+  --border: #e4e6ef;
+  --accent: #5b5bd6;
+  --accent-hover: #4a4ac4;
+  --accent-soft: #ececfb;
+  --danger: #e5484d;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(20, 20, 50, 0.04), 0 8px 24px rgba(20, 20, 50, 0.06);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111218;
+    --surface: #1a1b23;
+    --text: #ececf1;
+    --muted: #9497ad;
+    --border: #2b2d3a;
+    --accent: #7c7cf0;
+    --accent-hover: #9090f5;
+    --accent-soft: #26264a;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 64px 16px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 6px 0 24px;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.todo-form {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.todo-form input,
+.edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.todo-form input:focus,
+.edit-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  margin: 12px 16px 0;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border-radius: 8px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.filters {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.filter-btn:hover {
+  color: var(--text);
+}
+
+.filter-btn.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.link-btn {
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+  background: none;
+  border: none;
+}
+
+.link-btn:hover {
+  color: var(--danger);
+}
+
+.todo-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  animation: fade-in 0.2s ease;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item .title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  cursor: text;
+  transition: color 0.15s;
+}
+
+.todo-item.completed .title {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.checkbox {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  transition: all 0.15s;
+  pointer-events: none;
+}
+
+.checkbox input:hover + .checkmark {
+  border-color: var(--accent);
+}
+
+.checkbox input:focus-visible + .checkmark {
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.checkbox input:checked + .checkmark {
+  background: var(--accent)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E")
+    center / 14px no-repeat;
+  border-color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.todo-item:hover .actions,
+.todo-item:focus-within .actions {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .actions {
+    opacity: 1;
+  }
+}
+
+.icon-btn {
+  display: inline-flex;
+  padding: 6px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.icon-btn:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.icon-btn.danger:hover {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+}
+
+.empty {
+  margin: 0;
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--muted);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
