@@ -6,12 +6,23 @@ import { randomUUID } from 'node:crypto';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_FILE = process.env.DATA_FILE || path.join(__dirname, '..', 'data', 'todos.json');
 
+const DEFAULTS = {
+  notes: '',
+  date: null,
+  startTime: null,
+  endTime: null,
+  meetingLink: null,
+  priority: 'medium',
+  completed: false,
+};
+
 let todos = null;
 
 async function load() {
   if (todos) return todos;
   try {
-    todos = JSON.parse(await fs.readFile(DATA_FILE, 'utf8'));
+    // Fill in fields added after a task was first saved.
+    todos = JSON.parse(await fs.readFile(DATA_FILE, 'utf8')).map((t) => ({ ...DEFAULTS, ...t }));
   } catch (err) {
     if (err.code !== 'ENOENT') throw err;
     todos = [];
@@ -28,10 +39,15 @@ export async function listTodos() {
   return load();
 }
 
-export async function createTodo(title) {
+export async function getTodo(id) {
+  await load();
+  return todos.find((t) => t.id === id) ?? null;
+}
+
+export async function createTodo(fields) {
   await load();
   const now = new Date().toISOString();
-  const todo = { id: randomUUID(), title, completed: false, createdAt: now, updatedAt: now };
+  const todo = { id: randomUUID(), ...DEFAULTS, ...fields, createdAt: now, updatedAt: now };
   todos.unshift(todo);
   await save();
   return todo;
@@ -41,9 +57,7 @@ export async function updateTodo(id, changes) {
   await load();
   const todo = todos.find((t) => t.id === id);
   if (!todo) return null;
-  if (changes.title !== undefined) todo.title = changes.title;
-  if (changes.completed !== undefined) todo.completed = changes.completed;
-  todo.updatedAt = new Date().toISOString();
+  Object.assign(todo, changes, { updatedAt: new Date().toISOString() });
   await save();
   return todo;
 }
